@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: Administrator
+Build-Jdk: 1.8.0_181
+Main-Class: org.eclipse.jetty.start.Main
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Eclipse.org - Jetty
+Implementation-Version: 8.1.9.v20130131
+url: http://www.eclipse.org/jetty
+

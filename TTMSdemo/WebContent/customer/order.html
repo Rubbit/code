@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>汉唐剧院管理系统-购票</title>
+    <link rel="stylesheet" href="../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/slick.css" />
+    <link rel="stylesheet" href="../css/slicknav.css" />
+    <link rel="stylesheet" href="../css/animate.css" />
+    <link rel="stylesheet" href="../css/bootstrap.css" />
+    <link rel="stylesheet" href="../css/theme.css" />
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/jquery-ui.min.js"></script>
+	<script src="../js/jquery.form.min.js"></script>
+	<script src="../js/jquery.validate.min.js"></script>
+	<script src="../js/theme.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	
+<script type="text/javascript">
+var conid="";
+var schedid="";
+var chuan="";
+	window.onload = function(){
+		var url=location.search;
+        //location对象可以获取当前页面的URL地址，它的search属性可以获取？后面的部分（含？）
+		var theRequest=new Object();
+        if(url.indexOf("?")!=-1){
+        	var str = url.substr(2);
+        	var strs=str.split("&");
+        	console.log(strs);
+			//获得id
+			var sche=strs[0].split("=");
+			console.log(sche);
+        	//获得座位；
+        	var con=strs[1];
+        	console.log(con);
+        	var arr=con.split("=");
+        	var arr1=arr[1];
+        	console.log(arr1);
+        	var arr2=arr1.split(",");
+        	//获得名字
+        	var name =strs[2].split("=");
+        	var name1 = decodeURIComponent(name).split(",");
+        	$("#name").html(name1[1]);
+        	//获得时间
+        	var time =strs[5].split("=");
+        	var time1=time[1].split("-");
+        	var theTable = document.getElementById("table");//table的id
+    		var num=theTable.rows.length;
+        	var price =strs[4].split("=");
+        	var price1=price[1];
+        	var price2 = "￥"+price1;
+        	console.log(price2);
+        	$("#pay").html(price2);
+    		for(i=0; i<arr2.length; i++){
+    			var rowCount = theTable.rows.length; //获得当前表格的行数
+    			var row = theTable.insertRow(rowCount);//在tale里动态的增加tr
+    			if(arr2[i]%8==0){
+    				var row1 = Math.floor(arr2[i]/8);
+    				var col1 = 8;
+    			}else{
+    				var row1 = Math.floor(arr2[i]/8)+1;
+        			var col1 = arr2[i]%8;
+    			}
+    			row.insertCell(0).innerHTML = name1[1];
+    			row.insertCell(1).innerHTML = time1[0]+"-"+time1[1];
+    			row.insertCell(2).innerHTML = "VIP厅"
+    			row.insertCell(3).innerHTML = row1+"排"+col1+"座";
+        	}
+			conid=arr1;
+			schedid=sche[1];
+			chuan=str;
+			console.log(schedid);
+			console.log(chuan);
+     	}
+    }
+	function makePayment()
+	 {
+	     $.ajax({
+ 	        type:'POST',
+ 	        //contentType :'application/json',
+ 	        //TODO 传递参数不对，购票、支付只用传ticket_id串
+ 	        data:{'conid':conid,'schedid':schedid,"price":35},
+ 	        dataType:'text',
+ 	        url :'../SaleServlet?type=add',
+ 	        success :function(data) {
+ 	        	alert("购买成功!");
+ 	        	 window.location.assign("result.html?chuan="+chuan);
+ 	        },
+ 	        error :function(message) {
+     	    	 window.location.assign("index.html");
+ 	        }
+ 	    });
+	 }
+
+
+</script>
+</head>
+<body  class="contact-template" >
+<header id="site-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2" style="margin:5px">
+            <a href="index.html" id="test"><img src="../images/logo.png" width="127" height="48"/></a>
+
+            </div>
+            <div class="col-md-5 col-sm-8">
+                <nav id="site-nav" class="nav navbar-default">
+                    <ul class="nav navbar-nav">
+                        <li><a href="index.html">主页</a></li>
+                        <li><a href="board.html">榜单</a></li>
+                        <li><a href="contact.html">联系我们</a></li>
+                        <li><a href="login.html">登陆</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="main-page clearfix" style="width:100%;background-image:url('../images/banner_bg.png');">
+    <div class="container" style="margin-top: 15px;margin-bottom:15px">
+        <div class="row"style="">
+            <div class="col-md-3">
+                <div class="contact-form-wrapper">
+                    <img src="../images/property/1.jpg" width="232px" height="322px">
+                </div>
+            </div>
+            <div class="col-md-3" style="color:white">
+                <h3   id ="name" style="color:white"><!-- 我和我的家乡 --></h3>
+                <br><br>
+                <p>剧情 喜剧</p>
+                <p>中国大陆 / 153分钟</p>
+                <p>2020-10-01 上映</p>
+                <button type="button" class="btn btn-warning"><i class="fa fa-heart-o"></i> 想看</button>
+                <button type="button" class="btn btn-warning"><i class="fa fa-star-o"></i> 评分</button>
+                <br><br><button type="button" class="btn btn-danger" style="width:150px" onclick="alert('很遗憾，特惠票已售罄!')">特惠购票</button>
+            </div>
+            <div class="col-md-4" style="color:white;margin-top:210px">
+                <p >电影《我和我的家乡》定档2020年国庆，延续《我和我的祖国》集体创作的方式，由张艺谋担当总监制，宁浩担任总导演，张一白担任总策划，宁浩、徐峥、陈思诚、闫非&彭大魔、邓超&俞白眉分别执导五个故事。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-page clearfix">
+    <div class="container" style="margin-top: 15px;margin-bottom:15px">
+        <div class="row">
+            <table id="table" class="table table-hover" >
+                <tr>
+                    <th>剧目</th>
+                    <th>时间</th>
+                    <th>放映厅</th>
+                    <th>座位</th>
+                <tr>
+            </table>
+        </div>
+        <div class="container">
+            <div  class="row" style="float:right">实际支付：<span id="pay" style="color:red;font-size:30px"><!-- ￥70 --></span></div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <!-- 在button中加入 data-toggle="modal" data-target="#myModal" 可不调用js弹出对话框-->
+                <button class="btn btn-danger btn-lg" style="float:right;margin-left:50px" onclick="makePayment()">确认支付</button>
+            </div>
+        </div>
+    </div>
+
+	<a href="#top" id="scroll-top"><i class="fa fa-angle-up"></i></a>
+
+</body>
+</html>
